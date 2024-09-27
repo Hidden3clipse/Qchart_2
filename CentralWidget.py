@@ -1,4 +1,4 @@
-from PyQt6.QtCharts import QChartView, QChart, QValueAxis, QSplineSeries
+from PyQt6.QtCharts import QChartView, QChart, QValueAxis, QLineSeries
 from PyQt6.QtCore import Qt
 
 
@@ -6,20 +6,12 @@ class CentralWidget(QChartView):
     def __init__(self, parent=None):
         super(CentralWidget, self).__init__(parent)
 
-        series_spline = QSplineSeries()
-        series_spline.setName("Hyperbel")
-        series_spline.append(-5, -0.2)
-        series_spline.append(-4, -0.25)
-        series_spline.append(-3, -0.33)
-        series_spline.append(-2, -0.5)
-        series_spline.append(-1, -1)
-        series_spline.append(-0.01, -100)
-        series_spline.append(0.01, 100)
-        series_spline.append(1, 1)
-        series_spline.append(2, 0.5)
-        series_spline.append(3, 0.33)
-        series_spline.append(4, 0.25)
-        series_spline.append(5, 0.20)
+        series = QLineSeries()
+        series.setName("Parabel")
+        series.append(0, 0)
+        series.append(1, 1)
+        series.append(2, 4)
+        series.append(3, 9)
 
         axis_x = QValueAxis()
         axis_x.setTitleText("x-Achse")
@@ -32,9 +24,9 @@ class CentralWidget(QChartView):
         q_chart.addAxis(axis_x, Qt.AlignmentFlag.AlignBottom)
         q_chart.addAxis(axis_y, Qt.AlignmentFlag.AlignLeft)
 
-        q_chart.addSeries(series_spline)
+        q_chart.addSeries(series)
 
-        series_spline.attachAxis(axis_x)
-        series_spline.attachAxis(axis_y)
+        series.attachAxis(axis_x)
+        series.attachAxis(axis_y)
 
         self.setChart(q_chart)
