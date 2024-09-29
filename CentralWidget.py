@@ -8,9 +8,9 @@ class CentralWidget(QChartView):
     def __init__(self, parent=None):
         super(CentralWidget, self).__init__(parent)
 
-        delta_x = 0.02
-        x_min = -1.0 * math.pi
-        x_max = 2.0 * math.pi
+        delta_x = 0.1
+        x_min = -2.5
+        x_max = 3.0
 
         start = int(x_min / delta_x)
         end = int(x_max / delta_x)
@@ -18,13 +18,13 @@ class CentralWidget(QChartView):
 
         values_sine = []
         for x in values_x:
-            values_sine.append(math.sin(x))
+            values_sine.append(x**3 - 2 * x**2 + 4 * x - 3)
 
-        series_spline = QLineSeries()
-        series_spline.setName("Hyperbel")
+        series_sinus = QLineSeries()
+        series_sinus.setName("Polynom")
 
         for i in range(len(values_x)):
-            series_spline.append(values_x[i], values_y[i])
+            series_sinus.append(values_x[i], values_sine[i])
 
         axis_x = QValueAxis()
         axis_x.setRange(x_min, x_max)
@@ -32,16 +32,15 @@ class CentralWidget(QChartView):
 
         axis_y = QValueAxis()
         axis_y.setTitleText("y-Achse")
-        axis_y.setRange(-15, 15)
 
         q_chart = QChart()
 
         q_chart.addAxis(axis_x, Qt.AlignmentFlag.AlignBottom)
         q_chart.addAxis(axis_y, Qt.AlignmentFlag.AlignLeft)
 
-        q_chart.addSeries(series_spline)
+        q_chart.addSeries(series_sinus)
 
-        series_spline.attachAxis(axis_x)
-        series_spline.attachAxis(axis_y)
+        series_sinus.attachAxis(axis_x)
+        series_sinus.attachAxis(axis_y)
 
         self.setChart(q_chart)
