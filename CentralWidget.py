@@ -7,21 +7,17 @@ class CentralWidget(QChartView):
 
         series = QLineSeries()
         series.setName("Goldpreisentwicklung in €")
-        series.append(0, 0)
-        series.append(1, 1492.80)
-        series.append(2, 1698.03)
-        series.append(3, 1808.75)
-        series.append(4, 2391.22)
+        #series.append(0, 0)
+        series.append(QDateTime.fromString("2021-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1492.80)
+        series.append(QDateTime.fromString("2022-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1698.03)
+        series.append(QDateTime.fromString("2023-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1808.75)
+        series.append(QDateTime.fromString("2024-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2391.22)
 
         axis_x = QDateTimeAxis()
         axis_x.setTitleText("Datum")
 
-
-        start_date = QDateTime.fromString("2021-09-26", "yyyy-MM-dd", 0)
-        end_date = QDateTime.fromString("2024-09-26", "yyyy-MM-dd", 0)
-
-        start_date = add_milliseconds("2021-09-26", "00:00:00", 0)
-        end_date = add_milliseconds("2024-09-26", "00:00:00", 0)
+        start_date = QDateTime.fromString("2021-09-26", "yyyy-MM-dd")
+        end_date = QDateTime.fromString("2024-09-26", "yyyy-MM-dd")
 
         axis_x.setRange(start_date, end_date)
 
