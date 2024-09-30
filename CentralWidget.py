@@ -48,7 +48,7 @@ class CentralWidget(QChartView):
 
         axis_euro = QValueAxis()
         axis_euro.setTitleText("Goldpreis in €")
-        axis_euro.setRange(500, 2500)
+        axis_euro.setRange(500, 3000)
 
         axis_dollar = QValueAxis()
         axis_dollar.setTitleText("Goldpreis in $")
@@ -66,5 +66,8 @@ class CentralWidget(QChartView):
 
         series_euro.attachAxis(axis_x)
         series_euro.attachAxis(axis_euro)
+
+        series_dollar.attachAxis(axis_x)
+        series_dollar.attachAxis(axis_dollar)
 
         self.setChart(q_chart)
