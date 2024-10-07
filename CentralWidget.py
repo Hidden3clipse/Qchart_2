@@ -1,73 +1,53 @@
 from PyQt6.QtCharts import QChartView, QChart, QLineSeries, QDateTimeAxis, QValueAxis
 from PyQt6.QtCore import Qt, QDateTime
+from PyQt6.QtGui import QMouseEvent
+
 
 class CentralWidget(QChartView):
     def __init__(self, parent=None):
         super(CentralWidget, self).__init__(parent)
 
-        series_euro = QLineSeries()
-        series_euro.setName("Goldpreisentwicklung in €")
-        series_euro.append(QDateTime.fromString("2021-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1492.80)
-        series_euro.append(QDateTime.fromString("2021-11-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1590.60)
-        series_euro.append(QDateTime.fromString("2022-03-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1781.90)
-        series_euro.append(QDateTime.fromString("2022-06-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1731.28)
-        series_euro.append(QDateTime.fromString("2022-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1690.30)
-        series_euro.append(QDateTime.fromString("2022-11-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1827.45)
-        series_euro.append(QDateTime.fromString("2023-03-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1838.68)
-        series_euro.append(QDateTime.fromString("2023-06-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1763.45)
-        series_euro.append(QDateTime.fromString("2023-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1808.75)
-        series_euro.append(QDateTime.fromString("2023-11-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1827.45)
-        series_euro.append(QDateTime.fromString("2024-03-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2004.30)
-        series_euro.append(QDateTime.fromString("2024-06-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2164.99)
-        series_euro.append(QDateTime.fromString("2024-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2386.69)
+        self.__series = QLineSeries()
+        self.__series.setName("Goldpreisentwicklung in $")
 
-        series_dollar = QLineSeries()
-        series_dollar.setName("Goldpreisentwicklung in $")
-        series_dollar.append(QDateTime.fromString("2021-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1750.87)
-        series_dollar.append(QDateTime.fromString("2021-11-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1788.48)
-        series_dollar.append(QDateTime.fromString("2022-03-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1945.22)
-        series_dollar.append(QDateTime.fromString("2022-06-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1827.54)
-        series_dollar.append(QDateTime.fromString("2022-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1643.65)
-        series_dollar.append(QDateTime.fromString("2022-11-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1750.40)
-        series_dollar.append(QDateTime.fromString("2023-03-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1982.00)
-        series_dollar.append(QDateTime.fromString("2023-06-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1913.73)
-        series_dollar.append(QDateTime.fromString("2023-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1928.80)
-        series_dollar.append(QDateTime.fromString("2023-11-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2002.39)
-        series_dollar.append(QDateTime.fromString("2024-03-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2166.31)
-        series_dollar.append(QDateTime.fromString("2024-06-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 1913.73)
-        series_dollar.append(QDateTime.fromString("2024-09-26", "yyyy-MM-dd").toMSecsSinceEpoch(), 2658.13)
         axis_x = QDateTimeAxis()
         axis_x.setTitleText("Datum")
 
-        start_date = QDateTime.fromString("2021-09-26", "yyyy-MM-dd")
-        end_date = QDateTime.fromString("2024-09-26", "yyyy-MM-dd")
+        start_date = QDateTime.currentDateTime().addSecs(-1 * 60 * 10)
+        end_date = QDateTime.currentDateTime()
 
         axis_x.setRange(start_date, end_date)
 
-        axis_x.setFormat("dd.MM.yyyy")
-
-        axis_euro = QValueAxis()
-        axis_euro.setTitleText("Goldpreis in €")
-        axis_euro.setRange(1250, 2750)
+        axis_x.setFormat("hh:mm:ss")
 
         axis_dollar = QValueAxis()
         axis_dollar.setTitleText("Goldpreis in $")
         axis_dollar.setRange(1250, 2750)
 
-        q_chart = QChart()
-        q_chart.setTitle("Goldpreisentwicklung")
+        self.__chart = QChart()
+        self.__chart.setTitle("Goldpreisentwicklung")
 
-        q_chart.addAxis(axis_x, Qt.AlignmentFlag.AlignBottom)
-        q_chart.addAxis(axis_euro, Qt.AlignmentFlag.AlignLeft)
-        q_chart.addAxis(axis_dollar, Qt.AlignmentFlag.AlignRight)
+        self.__chart.addAxis(axis_x, Qt.AlignmentFlag.AlignBottom)
+        self.__chart.addAxis(axis_dollar, Qt.AlignmentFlag.AlignLeft)
 
-        q_chart.addSeries(series_euro)
-        q_chart.addSeries(series_dollar)
+        self.__chart.addSeries(self.__series)
 
-        series_euro.attachAxis(axis_x)
-        series_euro.attachAxis(axis_euro)
+        self.__series.attachAxis(axis_x)
+        self.__series.attachAxis(axis_dollar)
 
-        series_dollar.attachAxis(axis_x)
-        series_dollar.attachAxis(axis_dollar)
+        self.setChart(self.__chart)
 
-        self.setChart(q_chart)
+    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+        if event.button().LeftButton:
+            event.accept()
+
+            new_value = self.__chart.mapToValue(event.pos().toPointF(), self.__series)
+
+            for i in range(len(self.__series.points())):
+                if self.__series.at(i).x() > new_value.x():
+                    self.__series.insert(i, new_value)
+
+                    return
+
+            self.__series.append(new_value)
+
