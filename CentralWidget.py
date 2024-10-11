@@ -50,4 +50,3 @@ class CentralWidget(QChartView):
                     return
 
             self.__series.append(new_value)
-
